@@ -1,0 +1,58 @@
+---
+title: "Untitled"
+author: "Carlos"
+date: "2022-12-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = F,
+                      message = F,
+                      warning = F,
+                      fig.height=9, 
+                      fig.width=8, 
+                      out.width="90%")
+
+
+library(tidyverse)
+library(stars)
+library(mapview)
+library(leafsync)
+
+```
+
+## Map test
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+```{r}
+
+s <- 
+  "/mnt/bucket_mine/results/global_heat_pf/02_ensembled/AFR_mean-tasmax_ensemble.nc" %>% 
+  read_ncdf()
+
+m1 <- 
+  s %>% 
+  select(1) %>% 
+  slice(warming_levels, 1) %>% 
+  mapview(at = c(0, seq(5, 35, by = 1), Inf), 
+          legend = F,
+          layer.name = "WL_0.5")
+  
+m2 <- 
+  s %>% 
+  select(1) %>% 
+  slice(warming_levels, 6) %>% 
+  mapview(at = c(0, seq(5, 35, by = 1), Inf), 
+          legend = F,
+          layer.name = "WL_3.0")
+  
+
+m11 <- m1@map %>% leaflet::setView(39, 0, zoom = 5)
+m22 <- m2@map %>% leaflet::setView(39, 0, zoom = 5)
+
+sync(m11, m22)
+
+```
+
